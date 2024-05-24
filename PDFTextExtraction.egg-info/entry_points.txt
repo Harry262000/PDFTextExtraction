@@ -1,0 +1,2 @@
+[console_scripts]
+create_directories = setup:create_directories

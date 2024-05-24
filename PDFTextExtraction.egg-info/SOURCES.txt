@@ -1,0 +1,9 @@
+LICENSE
+README.md
+setup.py
+PDFTextExtraction.egg-info/PKG-INFO
+PDFTextExtraction.egg-info/SOURCES.txt
+PDFTextExtraction.egg-info/dependency_links.txt
+PDFTextExtraction.egg-info/entry_points.txt
+PDFTextExtraction.egg-info/requires.txt
+PDFTextExtraction.egg-info/top_level.txt
