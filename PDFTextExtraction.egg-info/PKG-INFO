@@ -1,8 +1,0 @@
-Metadata-Version: 2.1
-Name: PDFTextExtraction
-Version: 0.1
-License-File: LICENSE
-Requires-Dist: pdf2image
-Requires-Dist: pytesseract
-Requires-Dist: Pillow
-Requires-Dist: jupyter

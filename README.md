@@ -1,65 +1,61 @@
-# PDF Text Extraction
+# Advanced Document Classification using Transformers
 
-## Description
-This project extracts text from PDF files using OCR (Optical Character Recognition) with Tesseract and pdf2image.
+<a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
+    <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
+</a>
 
-## Directory Structure
-```
+A short description of the project.
 
-PDFTextExtraction/
-├── data/
-│ ├── raw_pdfs/
-│ ├── extracted_images/
-│ ├── extracted_text/
-├── logs/
-├── scripts/
-│ └── extract_text.py
-├── README.md
-└── requirements.txt
+## Project Organization
 
 ```
+├── LICENSE            <- Open-source license if one is chosen
+├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
+├── README.md          <- The top-level README for developers using this project.
+├── data
+│   ├── external       <- Data from third party sources.
+│   ├── interim        <- Intermediate data that has been transformed.
+│   ├── processed      <- The final, canonical data sets for modeling.
+│   └── raw            <- The original, immutable data dump.
+│
+├── docs               <- A default mkdocs project; see www.mkdocs.org for details
+│
+├── models             <- Trained and serialized models, model predictions, or model summaries
+│
+├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
+│                         the creator's initials, and a short `-` delimited description, e.g.
+│                         `1.0-jqp-initial-data-exploration`.
+│
+├── pyproject.toml     <- Project configuration file with package metadata for 
+│                         advanced_document_classification_using_transformers and configuration for tools like black
+│
+├── references         <- Data dictionaries, manuals, and all other explanatory materials.
+│
+├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
+│   └── figures        <- Generated graphics and figures to be used in reporting
+│
+├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
+│                         generated with `pip freeze > requirements.txt`
+│
+├── setup.cfg          <- Configuration file for flake8
+│
+└── advanced_document_classification_using_transformers   <- Source code for use in this project.
+    │
+    ├── __init__.py             <- Makes advanced_document_classification_using_transformers a Python module
+    │
+    ├── config.py               <- Store useful variables and configuration
+    │
+    ├── dataset.py              <- Scripts to download or generate data
+    │
+    ├── features.py             <- Code to create features for modeling
+    │
+    ├── modeling                
+    │   ├── __init__.py 
+    │   ├── predict.py          <- Code to run model inference with trained models          
+    │   └── train.py            <- Code to train models
+    │
+    └── plots.py                <- Code to create visualizations
+```
 
-## Setup
-1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/Harry262000/PDFTextExtraction.git
-    cd PDFTextExtraction
-    ```
+--------
 
-2. **Create and activate a virtual environment**:
-    ```bash
-    python3 -m venv pdf
-    source pdf/bin/activate
-    ```
-
-3. **Install the required dependencies**:
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4. **Install system dependencies**:
-    ```bash
-    sudo apt update
-    sudo apt install tesseract-ocr poppler-utils
-    ```
-
-## Usage
-1. **Place your PDF files** in the `data/raw_pdfs` directory.
-2. **Run the extraction script or Jupyter notebook**:
-    ```bash
-    cd scripts
-    jupyter notebook extract_text.ipynb
-    ```
-
-3. The extracted text will be saved in the `data/extracted_text` directory, and the images will be saved in the `data/extracted_images` directory.
-
-## Dependencies
-- pdf2image
-- pytesseract
-- Pillow
-- Jupyter
-- Tesseract OCR
-- Poppler-utils
-
-## Notes
-Ensure Tesseract OCR and Poppler-utils are installed on your system.

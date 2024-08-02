@@ -1,6 +1,6 @@
-setuptools
-pdf2image
-pytesseract
-Pillow
-poppler-utils
-jupyter
+black
+flake8
+isort
+pip
+python-dotenv
+-e .
