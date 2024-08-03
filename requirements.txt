@@ -3,4 +3,14 @@ flake8
 isort
 pip
 python-dotenv
+pytesseract
+camelot-py[cv]==0.10.1
+tabula-py==2.3.0
+spacy==3.2.1
+nltk==3.6.7
+pdfplumber==0.5.28
+pdfminer.six==20201018
+pymupdf==1.18.19
+pypdf==3.9.1
+pdfrw==0.4
 -e .
