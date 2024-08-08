@@ -1,61 +1,78 @@
-# Advanced Document Classification using Transformers
+# Interactive PDF Analysis and Extraction Tool
 
-<a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
-    <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
-</a>
+## Overview
+This project provides an interactive web-based tool that allows users to upload PDF documents, automatically extract tables and textual content, and interactively chat with the extracted data for insights. It aims to simplify the process of analyzing complex PDF documents such as bills or annual reports by offering automated extraction, visualization, and interactive querying.
 
-A short description of the project.
+## Live Interaction
+To see the tool in action, check out the live demo on [Streamlit](https://your-streamlit-link). This demo showcases the interactive features of the app, including PDF uploading, data extraction, and chat functionality.
 
-## Project Organization
+## Features
+- **PDF Upload**: Easily upload PDF files through a web interface.
+- **Automated Extraction**: Extract text and tables from the uploaded PDFs.
+- **Data Processing**: Organize extracted data in a structured format for efficient querying.
+- **Interactive Chat**: Engage with the extracted data using a natural language chatbot.
+- **Data Visualization**: Generate and interact with visual representations of the extracted tables.
+- **User Feedback**: Provide feedback to improve the tool's accuracy and usability.
 
-```
-├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
-├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
-│
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-│
-├── models             <- Trained and serialized models, model predictions, or model summaries
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
-│
-├── pyproject.toml     <- Project configuration file with package metadata for 
-│                         advanced_document_classification_using_transformers and configuration for tools like black
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
-│
-└── advanced_document_classification_using_transformers   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes advanced_document_classification_using_transformers a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
-```
+## Installation
 
---------
+### Prerequisites
+- Python 3.8+
+- `pip` (Python package installer)
 
+### Libraries and Tools
+- `streamlit`
+- `PyMuPDF`
+- `pdfplumber`
+- `tabula-py`
+- `pandas`
+- `matplotlib`
+- `seaborn`
+- `plotly`
+- `transformers` (Hugging Face)
+
+### Steps to Install
+1. Clone the repository:
+   ```bash
+   https://github.com/Harry262000/PDFTextExtraction.git
+
+2. Create a virtual enviorment and activate it:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate
+3. install the required libraries:
+   ```bash
+   pip install -r requirements.txt
+
+### Usage
+
+1. Run the streamlit app:
+   ```bash
+   streamlit run app.py
+
+2. Upload a PDF:
+   - `Use the web interface to upload a PDF document.`
+3. View Extracted Data:
+   - `Extracted text and tables will be displayed on the interface.`
+4. Interactive Chat:
+   - `Engage with the chatbot to query the extracted data.`
+5. Visualize Data:
+   - `View visual representations of the extracted tables.`
+
+### File Structure
+
+- `app.py`: Main application file for Streamlit.
+- `pdf_extraction.py`: Handles PDF extraction logic.
+- `chatbot.py`: Manages chatbot interactions.
+- `visualization.py`: Contains code for data visualization.
+- `requirements.txt`: Lists required libraries and dependencies.
+
+### Example Queries
+
+- "Show me the revenue for Q1."
+- "What are the expenses listed in the table on page 3?"
+- "Summarize the main points from the financial report."
+
+### Issues and Suggestions
+
+- If you encounter any issues or have suggestions for improvements, please raise an issue in the `GitHub Issues section` of this repository.
