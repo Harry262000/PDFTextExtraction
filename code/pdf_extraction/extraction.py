@@ -22,7 +22,7 @@ def extract_tables_from_pdf_tabula(pdf_path):
     return tables
 
 if __name__ == "__main__":
-    pdf_path = "/home/harry/PDFTextExtraction/data /financial_report.pdf"
+    pdf_path = "/home/harry/PDFTextExtraction/data /PwC_Audit_Report_2020.pdf"
     
     # Extract text
     text = extracted_text_from_pdf(pdf_path)
