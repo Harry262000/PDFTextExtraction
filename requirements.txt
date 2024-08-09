@@ -14,4 +14,3 @@ pdfrw==0.4
 streamlit
 transformers
 tensorflow
--e .
