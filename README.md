@@ -4,7 +4,7 @@
 This project provides an interactive web-based tool that allows users to upload PDF documents, automatically extract tables and textual content, and interactively chat with the extracted data for insights. It aims to simplify the process of analyzing complex PDF documents such as bills or annual reports by offering automated extraction, visualization, and interactive querying.
 
 ## Live Interaction
-To see the tool in action, check out the live demo on [Streamlit](https://your-streamlit-link). This demo showcases the interactive features of the app, including PDF uploading, data extraction, and chat functionality.
+To see the tool in action, check out the live demo on [Streamlit](https://financial-documents-extraction-harry262000.streamlit.app/). This demo showcases the interactive features of the app, including PDF uploading, data extraction, and chat functionality.
 
 ## Features
 - **PDF Upload**: Easily upload PDF files through a web interface.
