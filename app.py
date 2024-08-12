@@ -3,9 +3,15 @@ from PIL import Image
 import base64
 from io import BytesIO
 import os
-import pandas as pd
+import pdfplumber
 import time  # For simulating processing delay
+import sys 
+sys.path.append(os.path.join(os.path.dirname(__file__), 'code', 'pdf_extraction'))
 
+from extraction import is_scanned, extracted_text_from_pdf, extract_tables_from_pdf_camelot, extract_tables_from_pdf_tabula
+
+
+st.set_page_config(page_title="Financial Report Extraction", layout="wide")
 # Load the image for the circular display
 image_path = "app/assets/images/86480339.jpeg"
 image = Image.open(image_path)
@@ -146,13 +152,12 @@ This application allows you to upload a PDF document, automatically extract its 
 - **Interactive Chat:** Ask questions about the extracted data (functionality to be improved in future versions).
 
 ### Upload Guidelines:
-- Ensure the file is in PDF format.
-- The maximum file size allowed is 5 MB.
 - The application is designed to handle annual reports and similar documents. Performance may vary with other types of PDFs.
+- The maximum file size allowed is 5 MB.
 """)
 
 # File uploader widget with size limit
-uploaded_file = st.file_uploader("Upload a PDF file", type="pdf", help="Select a PDF file (up to 5 MB)")
+uploaded_file = st.file_uploader("Upload a PDF file (up to 5 MB)", type="pdf", help="Select a PDF file (up to 5 MB)")
 
 if uploaded_file is not None:
     # Check file size
@@ -164,33 +169,78 @@ if uploaded_file is not None:
         pdf_path = "/tmp/uploaded_file.pdf"
         with open(pdf_path, "wb") as f:
             f.write(uploaded_file.getvalue())
+         
+        if st.button("submit") == True:
+            with st.spinner('Processing... This may take a few minutes.'):
+                time.sleep(5)
 
-        # Simulate processing delay
-        with st.spinner('Processing... This may take a few minutes.'):
-            time.sleep(5)  # Simulate a delay for processing (e.g., 3-5 minutes)
-
-        # Extract text and tables (Placeholder functions)
-        text = "Extracted text from the PDF."  # Placeholder text
-        tables = []  # Placeholder tables
-
-        # Display extracted text
-        st.subheader("Extracted Text")
-        st.text_area("Text from PDF", value=text, height=300)
-        
-        # Display extracted tables
-        st.subheader("Extracted Tables")
-        if tables:
-            for i, table in enumerate(tables):
-                st.write(f"Table {i+1}")
-                st.dataframe(pd.DataFrame(table))
             
-            # Interactive chat placeholder
-            user_query = st.text_input("Ask a question about the data:")
-            if st.button("Submit"):
-                with st.spinner('Processing... This may take a few minutes.'):
-                    time.sleep(5)  # Simulating processing time
-                    # Placeholder function for query handling
-                    response = "This is where the response to your query will be displayed."
-                    st.write(response)
-        else:
-            st.write("No tables found in the PDF.")
+        # Check if the PDF is scanned or unscanned
+            if is_scanned(pdf_path):
+                st.write("This PDF appears to be scanned. OCR processing is required.")
+            else:
+                st.write("This PDF appears to be text-based.")
+
+                # Determine which pages are scanned or text-based
+                with pdfplumber.open(pdf_path) as pdf:
+                    scanned_pages = []
+                    text_pages = []
+                    for i, page in enumerate(pdf.pages):
+                        if is_scanned_page(page):
+                            scanned_pages.append(i + 1)
+                        else:
+                            text_pages.append(i + 1)
+
+                # Display page type information
+                st.write(f"Scanned pages: {scanned_pages}")
+                st.write(f"Text-based pages: {text_pages}")
+
+                # Prompt the user for their choice
+                options = ["Process scanned pages only", "Process text-based pages only", "Process entire document"]
+                choice = st.radio("Select the pages to process:", options)
+
+                if choice == "Process scanned pages only":
+                    if scanned_pages:
+                        extracted_text = extract_text_from_scanned_pdf(pdf_path)
+                        st.write("Scanned pages processed with OCR.")
+                        st.write(extracted_text)
+                    else:
+                        st.write("No scanned pages found to process.")
+
+                elif choice == "Process text-based pages only":
+                    if text_pages:
+                        extracted_text = extracted_text_from_pdf(pdf_path)
+                        tables_camelot = extract_tables_from_pdf_camelot(pdf_path)
+                        tables_tabula = extract_tables_from_pdf_tabula(pdf_path)
+                        st.write("Text-based pages processed.")
+                        st.write("Extracted Text:")
+                        st.write(extracted_text)
+                        st.write("Extracted Tables from Camelot:")
+                        for i, table in enumerate(tables_camelot):
+                            st.write(f"Table {i}:\n", table)
+                        st.write("Extracted Tables from Tabula:")
+                        for i, table in enumerate(tables_tabula):
+                            st.write(f"Table {i}:\n", table)
+                    else:
+                        st.write("No text-based pages found to process.")
+
+                elif choice == "Process entire document":
+                    if scanned_pages or text_pages:
+                        if scanned_pages:
+                            st.write("Processing scanned pages with OCR.")
+                            extracted_text_scanned = extract_text_from_scanned_pdf(pdf_path)
+                            st.write(extracted_text_scanned)
+                        if text_pages:
+                            st.write("Processing text-based pages.")
+                            extracted_text_text = extracted_text_from_pdf(pdf_path)
+                            tables_camelot = extract_tables_from_pdf_camelot(pdf_path)
+                            tables_tabula = extract_tables_from_pdf_tabula(pdf_path)
+                            st.write(extracted_text_text)
+                            st.write("Extracted Tables from Camelot:")
+                            for i, table in enumerate(tables_camelot):
+                                st.write(f"Table {i}:\n", table)
+                            st.write("Extracted Tables from Tabula:")
+                            for i, table in enumerate(tables_tabula):
+                                st.write(f"Table {i}:\n", table)
+                    else:
+                        st.write("No pages found to process.")
