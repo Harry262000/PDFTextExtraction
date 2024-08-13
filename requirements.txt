@@ -14,5 +14,5 @@ pdfrw==0.4
 streamlit
 transformers
 tensorflow
-camelot-py
-opencv-python
+camelot-py[cv]
+opencv-python-headless
