@@ -4,8 +4,23 @@ import tabula
 import fitz
 from PIL import Image
 import pytesseract
-import pandas as pd
 
+
+def open_pdf(pdf_path, password=None):
+    try:
+        doc = fitz.open(pdf_path)
+        if doc.needs_pass:
+            if password is not None:
+                if doc.authenticate(password):
+                    return doc
+                else:
+                    return None
+            else:
+                return None
+        return doc
+    except Exception as e:
+        return None
+    
 def is_scanned_page(page):
     """Check if a PDF page is scanned by looking for extractable text."""
     text = page.extract_text()  # Use extract_text for pdfplumber

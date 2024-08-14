@@ -9,6 +9,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), 'code', 'pdf_extraction'))
 
 from extraction import (
+    open_pdf,
     is_scanned_page,
     is_scanned,
     extract_text_from_pdf,
@@ -175,19 +176,31 @@ if uploaded_file is not None:
         pdf_path = "/tmp/uploaded_file.pdf"
         with open(pdf_path, "wb") as f:
             f.write(uploaded_file.getvalue())
-
+        
+        password = ""
+        if open_pdf(pdf_path) is None:
+            password = st.text_input("This PDF is password-protected. Please enter the password:", type="password")
+        
         # Button to trigger processing
         if st.button("Submit"):
             with st.spinner('Processing... This may take a few minutes.'):
                 time.sleep(5)
-                # Determine if the PDF is scanned or text-based based on all pages
+                
+            doc = open_pdf(pdf_path, password)
+            if doc is None:
+                st.error("Failed to open the PDF. Please check the password and try again.")
+            else:
+                if is_scanned(doc):
+                    st.write("This PDF appears to be scanned. OCR processing is required.")
+                
+                # Initialize flags and lists
                 all_scanned = True
                 some_text_based = False
+                scanned_pages = []
+                text_pages = []
 
+                # Determine page types
                 with pdfplumber.open(pdf_path) as pdf:
-                    scanned_pages = []
-                    text_pages = []
-
                     for i, page in enumerate(pdf.pages):
                         if is_scanned_page(page):
                             scanned_pages.append(i + 1)
@@ -200,14 +213,25 @@ if uploaded_file is not None:
                 st.write(f"Scanned pages: {scanned_pages}")
                 st.write(f"Text-based pages: {text_pages}")
 
-                # Determine overall PDF type
+                # Handle different cases
                 if all_scanned:
                     st.write("This PDF appears to be entirely scanned. OCR processing is required.")
+                    with st.spinner('Processing OCR on all pages...'):
+                        text = extract_text_from_scanned_pdf(pdf_path)
+                        st.write("Extracted Text from Scanned Pages:")
+                        st.text_area("Extracted Text", text)
                 elif some_text_based:
                     st.write("This PDF contains both scanned and text-based pages.")
-
-                # Prompt the user for their choice
-                options = ["Process scanned pages only", "Process text-based pages only", "Process entire document"]
-                choice = st.radio("Select the pages to process:", options)
-
-                
+                    with st.spinner('Processing...'):
+                        text_from_scanned = extract_text_from_scanned_pdf(pdf_path)
+                        text_from_text_based = extract_text_from_pdf(pdf_path)
+                        st.write("Extracted Text from Text-Based Pages:")
+                        st.text_area("Extracted Text from Text-Based Pages", text_from_text_based)
+                        st.write("Extracted Text from Scanned Pages:")
+                        st.text_area("Extracted Text from Scanned Pages", text_from_scanned)
+                else:
+                    st.write("All pages in this PDF are text-based.")
+                    with st.spinner('Extracting text directly from text-based pages...'):
+                        text_from_text_based = extract_text_from_pdf(pdf_path)
+                        st.write("Extracted Text from Text-Based Pages:")
+                        st.text_area("Extracted Text", text_from_text_based)
