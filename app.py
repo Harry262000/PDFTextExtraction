@@ -52,12 +52,25 @@ linkedin_icon_base64 = image_to_base64(linkedin_icon)
 github_icon_base64 = image_to_base64(github_icon)
 resume_icon_base64 = image_to_base64(resume_icon)
 
+# Page top padding added
+st.markdown(
+        """
+            <style>
+               .main .block-container {{
+                    padding-top: {padding_top}rem;
+                    padding-bottom: {padding_bottom}rem;
+                    }}
+            </style>""".format(
+            padding_top=1, padding_bottom=1
+        ),
+        unsafe_allow_html=True,
+    )
 # Display the image in a circular shape using CSS
 st.markdown("""
     <style>
     .circle-image {
-        width: 150px;
-        height: 150px;
+        width: 120px;
+        height: 120px;
         border-radius: 50%;
         overflow: hidden;
         display: flex;
@@ -71,9 +84,12 @@ st.markdown("""
         height: auto;
         object-fit: cover;
     }
+    .sidebar-text-name {
+        text-align: center;
+    }
     .sidebar-text {
         text-align: left;
-        margin-bottom: 10px;
+        margin-bottom: 0px;
     }
     .sidebar-link {
         text-align: center;
@@ -100,9 +116,7 @@ img_str = base64.b64encode(buffered.getvalue()).decode()
 # Display the circular image in the sidebar
 with st.sidebar:
     st.markdown(f'<div class="circle-image"><img src="data:image/jpeg;base64,{img_str}"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-text">Harshal Honde</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="sidebar-section-title">Contact Information:</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-text-name">Harshal Honde</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-text">HarshalHonde50@gmail.com</div>', unsafe_allow_html=True)
     if linkedin_icon_base64 and github_icon_base64:
         st.markdown(f"""
@@ -139,11 +153,6 @@ with st.sidebar:
     </ul>
     """, unsafe_allow_html=True)
     
-    st.markdown('<div class="sidebar-section-title">Hobbies and Interests</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-text">Reading</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-text">Traveling</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-text">Gaming</div>', unsafe_allow_html=True)
-
 # Title of the app
 st.title("Interactive PDF Analysis and Extraction Tool")
 
@@ -184,7 +193,7 @@ if uploaded_file is not None:
         # Button to trigger processing
         if st.button("Submit"):
             with st.spinner('Processing... This may take a few minutes.'):
-                time.sleep(5)
+                time.sleep(10)
                 
             doc = open_pdf(pdf_path, password)
             if doc is None:
@@ -208,20 +217,18 @@ if uploaded_file is not None:
                             text_pages.append(i + 1)
                             all_scanned = False
                             some_text_based = True
-
-                # Display page type information
-                st.write(f"Scanned pages: {scanned_pages}")
-                st.write(f"Text-based pages: {text_pages}")
-
+                               
                 # Handle different cases
                 if all_scanned:
                     st.write("This PDF appears to be entirely scanned. OCR processing is required.")
                     with st.spinner('Processing OCR on all pages...'):
                         text = extract_text_from_scanned_pdf(pdf_path)
-                        st.write("Extracted Text from Scanned Pages:")
                         st.text_area("Extracted Text", text)
-                elif some_text_based:
-                    st.write("This PDF contains both scanned and text-based pages.")
+                elif some_text_based:                 
+                    # Display page type information
+                    st.write(f"Scanned pages: {scanned_pages}" + f"Text-based pages: {text_pages}")
+                    st.write()
+                    st.write("This PDF contains a mix of scanned and text-based pages, will take times. . . . . . ")
                     with st.spinner('Processing...'):
                         text_from_scanned = extract_text_from_scanned_pdf(pdf_path)
                         text_from_text_based = extract_text_from_pdf(pdf_path)
