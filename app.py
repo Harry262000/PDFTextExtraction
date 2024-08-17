@@ -11,7 +11,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'code', 'pdf_extraction'
 from extraction import (
     open_pdf,
     is_scanned_page,
-    is_scanned,
     extract_text_from_pdf,
     extract_tables_from_pdf_camelot,
     extract_tables_from_pdf_tabula,
@@ -152,17 +151,19 @@ with st.sidebar:
         <li class="sidebar-text">Unstructured Data Handling</li>
     </ul>
     """, unsafe_allow_html=True)
-    
+
+# JavaScript for automatic scrolling
+
+   
 # Title of the app
 st.title("Interactive PDF Analysis and Extraction Tool")
 
 # Instructions
 st.write("""
-## Instructions
 This application allows you to upload a PDF document, automatically extract its text and tables, and interactively query the extracted data.
 
 ### Features:
-- **Upload a PDF:** Select and upload a PDF file (up to 50 MB).
+- **Upload a PDF:** Select and upload a PDF file (up to 5 MB).
 - **Text Extraction:** View the raw text extracted from the PDF.
 - **Table Extraction:** See tables extracted from the PDF displayed in a readable format.
 - **Interactive Chat:** Ask questions about the extracted data (functionality to be improved in future versions).
@@ -173,7 +174,8 @@ This application allows you to upload a PDF document, automatically extract its 
 """)
 
 # File uploader widget with size limit
-uploaded_file = st.file_uploader("Upload a PDF file (up to 5 MB)", type="pdf", help="Select a PDF file (up to 5 MB)")
+st.sidebar.title("Upload PDF")
+uploaded_file = st.sidebar.file_uploader("Upload a PDF file (up to 5 MB)", type="pdf", help="Select a PDF file (up to 5 MB)")
 
 if uploaded_file is not None:
     # Check file size
@@ -188,10 +190,10 @@ if uploaded_file is not None:
         
         password = ""
         if open_pdf(pdf_path) is None:
-            password = st.text_input("This PDF is password-protected. Please enter the password:", type="password")
+            password = st.sidebar.text_input("This PDF is password-protected. Please enter the password:", type="password")
         
         # Button to trigger processing
-        if st.button("Submit"):
+        if st.sidebar.button("Submit"):
             with st.spinner('Processing... This may take a few minutes.'):
                 time.sleep(10)
                 
@@ -199,14 +201,10 @@ if uploaded_file is not None:
             if doc is None:
                 st.error("Failed to open the PDF. Please check the password and try again.")
             else:
-                if is_scanned(doc):
-                    st.write("This PDF appears to be scanned. OCR processing is required.")
-                
                 # Initialize flags and lists
                 all_scanned = True
                 some_text_based = False
-                scanned_pages = []
-                text_pages = []
+                scanned_pages, text_pages = [], []
 
                 # Determine page types
                 with pdfplumber.open(pdf_path) as pdf:
@@ -218,27 +216,32 @@ if uploaded_file is not None:
                             all_scanned = False
                             some_text_based = True
                                
-                # Handle different cases
                 if all_scanned:
-                    st.write("This PDF appears to be entirely scanned. OCR processing is required.")
+                    st.write("This PDF appears to be entirely scanned. OCR process is applied.")
                     with st.spinner('Processing OCR on all pages...'):
                         text = extract_text_from_scanned_pdf(pdf_path)
-                        st.text_area("Extracted Text", text)
-                elif some_text_based:                 
-                    # Display page type information
-                    st.write(f"Scanned pages: {scanned_pages}" + f"Text-based pages: {text_pages}")
-                    st.write()
-                    st.write("This PDF contains a mix of scanned and text-based pages, will take times. . . . . . ")
-                    with st.spinner('Processing...'):
-                        text_from_scanned = extract_text_from_scanned_pdf(pdf_path)
-                        text_from_text_based = extract_text_from_pdf(pdf_path)
-                        st.write("Extracted Text from Text-Based Pages:")
-                        st.text_area("Extracted Text from Text-Based Pages", text_from_text_based)
-                        st.write("Extracted Text from Scanned Pages:")
-                        st.text_area("Extracted Text from Scanned Pages", text_from_scanned)
-                else:
+                        st.text_area("Extracted text:", text)
+                elif text_pages and not scanned_pages: 
                     st.write("All pages in this PDF are text-based.")
                     with st.spinner('Extracting text directly from text-based pages...'):
                         text_from_text_based = extract_text_from_pdf(pdf_path)
-                        st.write("Extracted Text from Text-Based Pages:")
-                        st.text_area("Extracted Text", text_from_text_based)
+                        st.text_area("Extracted Text", text_from_text_based)               
+                elif text_pages and scanned_pages:
+                    # Display page type information
+                    st.write(f"Scanned pages: {scanned_pages}")
+                    st.write(f"Text-based pages: {text_pages}")
+                    st.write("This PDF contains a mix of scanned and text-based pages.")
+
+                    with st.spinner('Processing text-based pages...'):
+                        text_from_text_based = extract_text_from_pdf(pdf_path)
+                        st.text_area("Extracted Text from Text-Based Pages", text_from_text_based)
+                        
+                    with st.spinner('Processing scanned pages...'):
+                        text_from_scanned = extract_text_from_scanned_pdf(pdf_path)
+                        st.text_area("Extracted Text from Scanned Pages", text_from_scanned)
+                        
+                    # Store the extracted text from text-based pages in session state
+                    st.session_state['extracted_text'] = text_from_text_based
+
+                else:
+                    st.write("This PDF is corrupted. Please check the PDF again.")
