@@ -18,3 +18,4 @@ camelot-py[cv]
 opencv-python-headless
 timm
 psutil
+torch

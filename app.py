@@ -132,25 +132,25 @@ with st.sidebar:
             </div>
         """, unsafe_allow_html=True)
     
-    st.markdown("""
-    <style>
-    .sidebar-list {
-        list-style-type: disc; /* Adds bullet points */
-        padding-left: 20px; /* Adjust the indentation */
-    }
-    .sidebar-text {
-        margin-bottom: 5px; /* Space between list items */
-    }
-    </style>
-    <div class="sidebar-section-title">Skills</div>
-    <ul class="sidebar-list">
-        <li class="sidebar-text">Python</li>
-        <li class="sidebar-text">Machine Learning</li>
-        <li class="sidebar-text">NLP</li>
-        <li class="sidebar-text">Text Extraction</li>
-        <li class="sidebar-text">Unstructured Data Handling</li>
-    </ul>
-    """, unsafe_allow_html=True)
+    # st.markdown("""
+    # <style>
+    # .sidebar-list {
+    #     list-style-type: disc; /* Adds bullet points */
+    #     padding-left: 20px; /* Adjust the indentation */
+    # }
+    # .sidebar-text {
+    #     margin-bottom: 5px; /* Space between list items */
+    # }
+    # </style>
+    # <div class="sidebar-section-title">Skills</div>
+    # <ul class="sidebar-list">
+    #     <li class="sidebar-text">Python</li>
+    #     <li class="sidebar-text">Machine Learning</li>
+    #     <li class="sidebar-text">NLP</li>
+    #     <li class="sidebar-text">Text Extraction</li>
+    #     <li class="sidebar-text">Unstructured Data Handling</li>
+    # </ul>
+    # """, unsafe_allow_html=True)
 
 # JavaScript for automatic scrolling
 
